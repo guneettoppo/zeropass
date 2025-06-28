@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String?   @unique
+  phone     String?   @unique
+  isAdmin   Boolean   @default(false)
+  isBanned  Boolean   @default(false)
+  sessions  Session[]
+  createdAt DateTime  @default(now())
+}
+
+model OTP {
+  id        String    @id @default(uuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+}
+
+model MailToken {
+  id        String    @id @default(uuid())
+  email     String
+  token     String
+  expiresAt DateTime
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  ip        String
+  userAgent String
+  createdAt DateTime @default(now())
+}
+
+model AdminTOTP {
+  id     String @id @default(uuid())
+  userId String @unique
+  secret String
+}
