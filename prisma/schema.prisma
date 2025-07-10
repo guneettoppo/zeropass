@@ -8,24 +8,26 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String?   @unique
-  phone     String?   @unique
-  isAdmin   Boolean   @default(false)
-  isBanned  Boolean   @default(false)
+  id        String     @id @default(uuid())
+  email     String?    @unique
+  phone     String?    @unique
+  isAdmin   Boolean    @default(false)
+  isBanned  Boolean    @default(false)
   sessions  Session[]
-  createdAt DateTime  @default(now())
+  createdAt DateTime   @default(now())
+  adminTotp AdminTOTP?
+  files     File[]
 }
 
 model OTP {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   phone     String
   code      String
   expiresAt DateTime
 }
 
 model MailToken {
-  id        String    @id @default(uuid())
+  id        String   @id @default(uuid())
   email     String
   token     String
   expiresAt DateTime
@@ -44,4 +46,17 @@ model AdminTOTP {
   id     String @id @default(uuid())
   userId String @unique
   secret String
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model File {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+  path      String
+  size      Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
