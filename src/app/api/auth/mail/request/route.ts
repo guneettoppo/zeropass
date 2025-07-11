@@ -31,8 +31,14 @@ export async function POST(req: Request) {
 
         // 👇 Add disable comment **above** the usage
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-        console.error('❌ MAIL REQUEST ERROR:', err.message || err);
+    } catch (err) {
+        if (err instanceof Error) {
+            console.error('❌ MAIL REQUEST ERROR:', err.message);
+        } else {
+            console.error('❌ MAIL REQUEST ERROR:', err);
+        }
+
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
     }
+
 }

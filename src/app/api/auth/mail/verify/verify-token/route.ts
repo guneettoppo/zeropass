@@ -42,9 +42,7 @@ export async function GET(req: Request) {
         let user = await prisma.user.findUnique({ where: { email } });
 
         if (!user) {
-            user = await prisma.user.create({
-                data: { email }
-            });
+            user = await prisma.user.create({ data: { email } });
             console.log('🆕 Created user:', user);
         }
 
@@ -60,8 +58,13 @@ export async function GET(req: Request) {
         console.log('✅ Issued JWT for:', email);
         return new Response(JSON.stringify({ token: jwtToken }), { status: 200 });
 
-    } catch (err: any) {
-        console.error('❌ VERIFY ERROR:', err.message || err);
+    } catch (err) {
+        if (err instanceof Error) {
+            console.error('❌ Token verify error:', err.message);
+        } else {
+            console.error('❌ Unknown error:', err);
+        }
+
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
     }
 }
