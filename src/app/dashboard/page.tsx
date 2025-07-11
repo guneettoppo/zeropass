@@ -3,16 +3,23 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface FileEntry {
+    id: string;
+    name: string;
+    path: string;
+    size: number;
+}
+
 export default function DashboardPage() {
     const router = useRouter();
     const [email, setEmail] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [message, setMessage] = useState('');
-    const [files, setFiles] = useState<any[]>([]);
+    const [files, setFiles] = useState<FileEntry[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    // Decode JWT and fetch uploaded files
+    // Load user + files
     useEffect(() => {
         const token = localStorage.getItem('zeropass-token');
         if (!token) {
@@ -35,7 +42,7 @@ export default function DashboardPage() {
         } catch {
             router.push('/');
         }
-    }, []);
+    }, [router]);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selected = e.target.files?.[0];
@@ -70,14 +77,13 @@ export default function DashboardPage() {
         if (res.ok) {
             setMessage('✅ File uploaded successfully!');
             setFile(null);
-            if (fileInputRef.current) fileInputRef.current.value = '';
+            fileInputRef.current!.value = '';
 
             // Reload file list
-            const newFiles = await fetch('/api/files/list', {
+            const updated = await fetch('/api/files/list', {
                 headers: { Authorization: `Bearer ${token}` },
             }).then((res) => res.json());
-
-            setFiles(newFiles);
+            setFiles(updated);
         } else {
             setMessage(`❌ Upload failed: ${data.error}`);
         }
@@ -127,7 +133,7 @@ export default function DashboardPage() {
                     </button>
                 )}
 
-                {message && <p>{message}</p>}
+                {message && <p className="text-sm">{message}</p>}
             </div>
 
             {/* File List */}
@@ -145,7 +151,10 @@ export default function DashboardPage() {
                                 <div className="text-sm">
                                     <p className="font-medium">{file.name}</p>
                                     <p className="text-xs text-gray-500">
-                                        {(file.size / 1024).toFixed(2)} KB
+                                        {(file.size / 1024).toLocaleString(undefined, {
+                                            maximumFractionDigits: 2,
+                                        })}{' '}
+                                        KB
                                     </p>
                                 </div>
                                 <a

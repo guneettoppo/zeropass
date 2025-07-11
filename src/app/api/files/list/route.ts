@@ -12,10 +12,20 @@ export async function GET(req: Request) {
 
         const payload = jwt.verify(token, process.env.JWT_SECRET!) as any;
 
-        const files = await prisma.file.findMany({
+        type FileEntry = {
+            id: string;
+            name: string;
+            path: string;
+            size: number;
+            userId: string;
+            createdAt: Date;
+        };
+
+        const files: FileEntry[] = await prisma.file.findMany({
             where: { userId: payload.userId },
             orderBy: { createdAt: 'desc' },
         });
+
 
         return new Response(JSON.stringify(files), { status: 200 });
     } catch (err) {

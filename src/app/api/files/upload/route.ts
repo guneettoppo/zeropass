@@ -9,6 +9,13 @@ import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
+interface JwtPayload {
+    userId: string;
+    email: string;
+    iat?: number;
+    exp?: number;
+}
+
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
@@ -19,8 +26,8 @@ export async function POST(req: NextRequest) {
             return new Response(JSON.stringify({ error: 'Missing token or file' }), { status: 400 });
         }
 
-        const payload = jwt.verify(token, process.env.JWT_SECRET!);
-        const userId = (payload as any).userId;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+        const userId = decoded.userId;
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);

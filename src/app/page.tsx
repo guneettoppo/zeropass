@@ -49,6 +49,7 @@ export default function Home() {
           >
             Read our docs
           </a>
+          <a href="/login">Log in</a>
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">

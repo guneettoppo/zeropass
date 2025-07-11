@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
-import { Twilio } from 'twilio';
+// import { Twilio } from 'twilio';
 
 const prisma = new PrismaClient();
-const twilio = new Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
+// const twilio = new Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN!);
 
 export async function POST(req: Request) {
     const { phone } = await req.json();
