@@ -17,7 +17,7 @@ export async function POST(req: Request) {
             data: { email, token, expiresAt },
         });
 
-        const link = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/mail/verify?token=${token}`;
+        const link = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/mail/verify?token=${token}`;
 
         await resend.emails.send({
             from: 'onboarding@resend.dev',
