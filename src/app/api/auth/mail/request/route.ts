@@ -29,6 +29,8 @@ export async function POST(req: Request) {
         console.log('✅ Email sent to:', email);
         return new Response(JSON.stringify({ message: 'Link sent!' }), { status: 200 });
 
+        // 👇 Add disable comment **above** the usage
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
         console.error('❌ MAIL REQUEST ERROR:', err.message || err);
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });

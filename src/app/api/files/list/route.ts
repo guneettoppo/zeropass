@@ -9,8 +9,11 @@ export async function GET(req: Request) {
         if (!token) {
             return new Response(JSON.stringify({ error: 'Missing token' }), { status: 401 });
         }
-
-        const payload = jwt.verify(token, process.env.JWT_SECRET!) as any;
+        type JWTPayload = {
+            userId: string;
+            email: string;
+        };
+        const payload = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
 
         type FileEntry = {
             id: string;
