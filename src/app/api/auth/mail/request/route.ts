@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         if (!email) throw new Error('No email provided');
 
         const token = crypto.randomBytes(32).toString('hex');
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 min expiry
 
         await prisma.mailToken.create({
             data: { email, token, expiresAt },
@@ -29,16 +29,9 @@ export async function POST(req: Request) {
         console.log('✅ Email sent to:', email);
         return new Response(JSON.stringify({ message: 'Link sent!' }), { status: 200 });
 
-        // 👇 Add disable comment **above** the usage
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err) {
-        if (err instanceof Error) {
-            console.error('❌ MAIL REQUEST ERROR:', err.message);
-        } else {
-            console.error('❌ MAIL REQUEST ERROR:', err);
-        }
-
+    } catch (err: any) {
+        console.error('❌ MAIL REQUEST ERROR:', err.message || err);
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
     }
-
 }
