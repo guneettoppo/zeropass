@@ -19,12 +19,7 @@ model User {
   files     File[]
 }
 
-model OTP {
-  id        String   @id @default(uuid())
-  phone     String
-  code      String
-  expiresAt DateTime
-}
+
 
 model MailToken {
   id        String   @id @default(uuid())
