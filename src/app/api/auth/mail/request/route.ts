@@ -25,7 +25,7 @@ export async function POST(req: Request) {
         if (contactResult.error) {
             console.warn('⚠️ Resend contact creation error:', contactResult.error.message);
         } else {
-            console.log('📇 Added to Resend Audience:', contactResult.id);
+            console.log('📇 Added to Resend Audience:', contactResult.data?.id);
         }
 
         const token = crypto.randomBytes(32).toString('hex');
