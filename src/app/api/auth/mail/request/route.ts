@@ -11,14 +11,12 @@ export async function POST(req: Request) {
         const { email } = await req.json();
         if (!email) throw new Error('No email provided');
 
-        // Create user in DB if not exists
         let user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
             user = await prisma.user.create({ data: { email } });
             console.log('🆕 New user created:', email);
         }
 
-        // ✅ Add to Resend Audience
         const contactResult = await resend.contacts.create({
             email,
             audienceId: AUDIENCE_ID,
@@ -30,7 +28,6 @@ export async function POST(req: Request) {
             console.log('📇 Added to Resend Audience:', contactResult.id);
         }
 
-        // Create login token
         const token = crypto.randomBytes(32).toString('hex');
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
@@ -40,7 +37,6 @@ export async function POST(req: Request) {
 
         const link = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/mail/verify?token=${token}`;
 
-        // Send login email
         await resend.emails.send({
             from: 'onboarding@resend.dev',
             to: email,
@@ -51,8 +47,13 @@ export async function POST(req: Request) {
         console.log('✅ Email sent to:', email);
         return new Response(JSON.stringify({ message: 'Link sent!' }), { status: 200 });
 
-    } catch (err: any) {
-        console.error('❌ Signup error:', err.message || err);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+            console.error('❌ Signup error:', err.message);
+        } else {
+            console.error('❌ Unknown signup error:', err);
+        }
         return new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 });
     }
 }
+
