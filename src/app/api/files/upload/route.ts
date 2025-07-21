@@ -1,9 +1,6 @@
-// src/app/api/files/upload/route.ts
-
-import { PrismaClient } from '@prisma/client';
 import { NextRequest } from 'next/server';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { put } from '@vercel/blob';
+import { PrismaClient } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import jwt from 'jsonwebtoken';
 
@@ -23,33 +20,61 @@ export async function POST(req: NextRequest) {
         const file = formData.get('file') as File;
 
         if (!token || !file) {
-            return new Response(JSON.stringify({ error: 'Missing token or file' }), { status: 400 });
+            return new Response(
+                JSON.stringify({ error: 'Missing token or file' }),
+                { status: 400 }
+            );
         }
 
+        // Decode token
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
         const userId = decoded.userId;
 
+        // Convert to buffer to calculate size
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
+        // ✅ Check 500MB limit
+        const userFiles = await prisma.file.findMany({
+            where: { userId },
+            select: { size: true },
+        });
+
+        const usedBytes = userFiles.reduce((acc, file) => acc + file.size, 0);
+        const maxBytes = 500 * 1024 * 1024; // 500MB
+
+        if (usedBytes + buffer.length > maxBytes) {
+            return new Response(
+                JSON.stringify({ error: 'Storage limit exceeded (500MB)' }),
+                { status: 403 }
+            );
+        }
+
+        // ✅ Upload to Vercel Blob
         const filename = `${uuidv4()}_${file.name}`;
-        const uploadPath = path.join(process.cwd(), 'uploads', filename);
+        const blob = await put(filename, file.stream(), {
+            access: 'public',
+        });
 
-        await writeFile(uploadPath, buffer);
-
+        // ✅ Save to DB
         const dbEntry = await prisma.file.create({
             data: {
                 name: file.name,
-                path: filename,
+                path: blob.url, // public URL
                 size: buffer.length,
                 userId,
             },
         });
 
-        return new Response(JSON.stringify({ message: 'Uploaded', file: dbEntry }), { status: 200 });
-
-    } catch (err) {
+        return new Response(
+            JSON.stringify({ message: 'Uploaded', file: dbEntry }),
+            { status: 200 }
+        );
+    } catch (err: any) {
         console.error('❌ Upload error:', err);
-        return new Response(JSON.stringify({ error: 'Upload failed' }), { status: 500 });
+        return new Response(
+            JSON.stringify({ error: 'Upload failed' }),
+            { status: 500 }
+        );
     }
 }

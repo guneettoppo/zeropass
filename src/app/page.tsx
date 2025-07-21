@@ -31,7 +31,7 @@ export default function Home() {
           <div className="flex gap-4 items-center flex-col sm:flex-row">
             <a
                 href="/login"
-                className="px-4 py-2 rounded-md bg-black text-white font-medium hover:bg-gray-800 transition"
+                className="px-4 py-2 rounded-md bg-blue-800 text-white font-medium hover:bg-blue-500 transition"
             >
               Log in
             </a>
