@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         const link = `${process.env.NEXT_PUBLIC_BASE_URL}/auth/mail/verify?token=${token}`;
 
         await resend.emails.send({
-            from: 'onboarding@resend.dev',
+            from: 'login@zeropassdrive.space',
             to: email,
             subject: 'Your ZeroPass Login Link',
             html: `<p>Click to log in: <a href="${link}">${link}</a></p>`,
