@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
             JSON.stringify({ message: 'Uploaded', file: dbEntry }),
             { status: 200 }
         );
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error('❌ Upload error:', err);
         return new Response(
             JSON.stringify({ error: 'Upload failed' }),
