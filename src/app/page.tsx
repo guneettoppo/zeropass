@@ -45,8 +45,7 @@ export default function Home() {
               ZeroPass Drive is a modern file storage and access system that
               removes the need for passwords. It uses Magic Links(mail verification),
               and WebAuthn to authenticate users. After login, users can upload,
-              view, and manage files securely—just like a cloud drive. New user email verification is temporarily
-              unavailable due to deployment cost constraints. We’ll enable it soon as we move to a production-ready environment
+              view, and manage files securely—just like a cloud drive.
               Mobile OTP login is architecturally supported but temporarily disabled in production
               to optimize operational costs associated with SMS delivery.
             </p>
