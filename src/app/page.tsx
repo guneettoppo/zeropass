@@ -50,7 +50,7 @@ export default function Home() {
               to optimize operational costs associated with SMS delivery.
             </p>
             <p className="mt-2">
-              Built with Next.js, TailwindCSS, FastAPI backend, and hosted on Vercel & NeonDB,
+              Built with Next.js, TailwindCSS, RESTAPI backend, and hosted on Vercel & NeonDB,
               it emphasizes security and seamless user experience.
             </p>
           </section>
