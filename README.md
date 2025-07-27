@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ZeroPassDrive
 
-## Getting Started
+**ZeroPassDrive** is a modern, passwordless file storage app built with secure, JWT-based authentication and file uploads via Vercel Blob. Each user gets 500MB of storage and can upload files after logging in via email magic link (powered by Resend).
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+- 🔐 Passwordless login & signup (Resend + JWT)
+- 🧾 Authenticated file uploads (Max 500MB per user)
+- ☁️ Uploads handled via [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
+- 🗃 File metadata stored in PostgreSQL using Prisma + Neon
+- 🧪 Fully typed API with error handling
+- 📄 Clean codebase with modular structure (Next.js App Router)
+
+---
+
+## 🛠 Tech Stack
+
+| Layer       | Tech                                       |
+|-------------|--------------------------------------------|
+| Frontend    | Next.js (App Router)                       |
+| Styling     | None (Minimal UI, no Tailwind)             |
+| Auth        | Resend (email magic link), JWT             |
+| DB          | PostgreSQL via Neon + Prisma ORM           |
+| Uploads     | Vercel Blob (`@vercel/blob`)               |
+| API         | RESTful endpoints in `/api` directory      |
+| Deployment  | Vercel (fully serverless-compatible)       |
+
+---
+
+## 📦 Folder Structure (Key Parts)
+```
+/src
+└── app
+├── api
+│ └── auth # Email login/signup routes
+│ └── files
+│ ├── upload # File upload route
+│ └── list # List files route (if implemented)
+└── lib
+└── auth.ts # JWT utilities
+└── prisma.ts # Prisma client
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/route.ts`. The page auto-updates as you edit the file.
+## 🔐 Authentication Flow
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. User enters email
+2. Resend sends a magic link
+3. JWT is generated and returned on login
+4. All protected routes expect a valid Bearer token in `Authorization` header
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📂 File Upload Flow
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Authenticated user selects a file
+- File is streamed to Vercel Blob
+- On success:
+  - A public Blob URL is returned
+  - Metadata (name, size, path, userId) is saved in Neon via Prisma
+- Total user upload is capped at 500MB
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🧾 Environment Variables
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+# Prisma + Neon
+DATABASE_URL=postgresql://...
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# JWT
+JWT_SECRET=your-secret-key
+
+# Vercel Blob
+BLOB_READ_WRITE_TOKEN=your-vercel-blob-token
+
+# Resend
+RESEND_API_KEY=your-resend-key
+RESEND_FROM=you@yourdomain.com
+
+```
+## ✨ Credits
+
+🔗 [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
+
+🔐 [Resend](https://resend.com/)
+
+🧬 [Prisma](https://www.prisma.io/)
+
+☁️ [Neon](https://neon.com/)
+
+⚙️ [Next.js](https://nextjs.org/)
+
+##  
+Made with 🖥️ By Guneet Toppo
