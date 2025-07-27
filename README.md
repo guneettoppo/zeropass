@@ -1,4 +1,4 @@
-# ZeroPassDrive
+# [ZeroPassDrive](https://www.zeropassdrive.space/)
 
 **ZeroPassDrive** is a modern, passwordless file storage app built with secure, JWT-based authentication and file uploads via Vercel Blob. Each user gets 500MB of storage and can upload files after logging in via email magic link (powered by Resend).
 
