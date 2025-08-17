@@ -30,8 +30,8 @@ export default function MailForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-3 max-w-sm mx-auto mt-12">
-            <h1 className="text-2xl font-bold mb-2">🔐 Login to ZeroPass</h1>
+        <form onSubmit={handleSubmit} className="  flex flex-col space-y-3 max-w-sm mx-auto mt-12">
+            <h1 className="content-center-safe text-2xl font-bold mb-2"> Login to ZeroPass</h1>
             <input
                 type="email"
                 value={email}
@@ -43,7 +43,7 @@ export default function MailForm() {
             <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
                 {status === 'sending' ? 'Sending...' : 'Send Login Link'}
             </button>

@@ -34,7 +34,7 @@ export default function MailVerifyPage() {
             .catch(() => setStatus('error'));
     }, [router, searchParams]);
 
-    if (status === 'verifying') return <p>🔐 Verifying token...</p>;
-    if (status === 'success') return <p>✅ Login successful. Redirecting...</p>;
+    if (status === 'verifying') return <p> Verifying token...</p>;
+    if (status === 'success') return <p> Login successful. Redirecting...</p>;
     return <p>❌ Invalid or expired token</p>;
 }

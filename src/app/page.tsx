@@ -1,7 +1,8 @@
-
+import TextType from "@/components/TextType";
 
 export default function Home() {
   return (
+
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <a
             href="https://github.com/guneettoppo"
@@ -12,11 +13,19 @@ export default function Home() {
           Made by Guneet Toppo
         </a>
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+
           <h1 className="text-2xl sm:text-3xl font-semibold text-center sm:text-left">
-            Welcome to ZeroPass Drive
+            <TextType
+                text={["Welcome to ZeroPass Drive", "NON password Drive with fast and secure access", "Read steps Below to Get Started  "]}
+                typingSpeed={75}
+                pauseDuration={1500}
+                showCursor={true}
+                cursorCharacter="|"
+            />
           </h1>
 
-          <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
+          <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left justify-around font-[family-name:var(--font-geist-mono)]">
+
             <li className="mb-2 tracking-[-.01em]">
               Get started by clicking log in to enter your e-mail address.
             </li>
@@ -38,10 +47,10 @@ export default function Home() {
           </div>
 
           {/* Notes Section */}
-          <section className="mt-10 max-w-2xl text-sm sm:text-base text-center sm:text-left text-gray-700 leading-relaxed">
-            <h2 className="text-lg font-bold mb-4 text-white">About ZeroPass Drive</h2>
+          <section className="mt-10 max-w-2xl text-sm sm:text-base text-justify-center sm:text-left text-gray-700 leading-relaxed">
+            <h2 className="text-lg text-justify font-bold mb-4 text-white">About ZeroPass Drive</h2>
             <p>
-              {/* 🔽 Replace this with your own content */}
+
               ZeroPass Drive is a modern file storage and access system that
               removes the need for passwords. It uses Magic Links(mail verification),
               and WebAuthn to authenticate users. After login, users can upload,

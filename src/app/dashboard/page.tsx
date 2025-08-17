@@ -21,7 +21,6 @@ export default function DashboardPage() {
 
     const maxBytes = 500 * 1024 * 1024; // 500MB
 
-    // Load user and files
     useEffect(() => {
         const token = localStorage.getItem('zeropass-token');
         if (!token) {
@@ -31,13 +30,13 @@ export default function DashboardPage() {
 
         try {
             const payload = JSON.parse(atob(token.split('.')[1]));
-            setEmail(payload.email);
+            setEmail(payload.email as string);
 
             fetch('/api/files/list', {
                 headers: { Authorization: `Bearer ${token}` },
             })
                 .then((res) => res.json())
-                .then((data) => setFiles(data))
+                .then((data: FileEntry[]) => setFiles(data))
                 .catch((err) => console.error('❌ Failed to fetch files:', err));
         } catch {
             router.push('/');
@@ -75,26 +74,31 @@ export default function DashboardPage() {
         setUploading(true);
         setMessage('');
 
-        const res = await fetch('/api/files/upload', {
-            method: 'POST',
-            body: formData,
-        });
+        try {
+            const res = await fetch('/api/files/upload', {
+                method: 'POST',
+                body: formData,
+            });
 
-        const data = await res.json();
-        setUploading(false);
+            const data = await res.json();
+            setUploading(false);
 
-        if (res.ok) {
-            setMessage('✅ File uploaded successfully!');
-            setFile(null);
-            if (fileInputRef.current) fileInputRef.current.value = '';
+            if (res.ok) {
+                setMessage('✅ File uploaded successfully!');
+                setFile(null);
+                if (fileInputRef.current) fileInputRef.current.value = '';
 
-            const updated = await fetch('/api/files/list', {
-                headers: { Authorization: `Bearer ${token}` },
-            }).then((res) => res.json());
+                const updated = await fetch('/api/files/list', {
+                    headers: { Authorization: `Bearer ${token}` },
+                }).then((res) => res.json());
 
-            setFiles(updated);
-        } else {
-            setMessage(`❌ Upload failed: ${data.error}`);
+                setFiles(updated);
+            } else {
+                setMessage(`❌ Upload failed: ${data.error}`);
+            }
+        } catch (err) {
+            setMessage('❌ Network error during upload.');
+            setUploading(false);
         }
     };
 
@@ -108,23 +112,23 @@ export default function DashboardPage() {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
+
+
     return (
         <main className="p-6">
             <h1 className="text-2xl font-bold mb-2">📁 ZeroPass Drive</h1>
             {email && <p className="mb-4 text-gray-600">Logged in as: {email}</p>}
 
-            {/* Usage Bar */}
             <div className="w-full bg-gray-300 h-4 rounded overflow-hidden mb-1">
                 <div
                     className="bg-blue-500 h-full"
                     style={{ width: `${percentUsed}%` }}
-                ></div>
+                />
             </div>
             <p className="text-sm text-gray-700 mb-6">
                 Used {(totalBytesUsed / (1024 * 1024)).toFixed(2)} MB of 500 MB ({percentUsed}%)
             </p>
 
-            {/* Upload Controls */}
             <div className="flex flex-col space-y-3 max-w-md">
                 <button
                     onClick={handleUploadClick}
@@ -157,7 +161,6 @@ export default function DashboardPage() {
                 {message && <p className="text-sm">{message}</p>}
             </div>
 
-            {/* File List */}
             <div className="mt-8 max-w-md">
                 <h2 className="text-lg font-semibold mb-2">📂 Your Files</h2>
                 {files.length === 0 ? (
