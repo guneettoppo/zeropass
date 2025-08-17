@@ -96,7 +96,7 @@ export default function DashboardPage() {
             } else {
                 setMessage(`❌ Upload failed: ${data.error}`);
             }
-        } catch (err) {
+        } catch  {
             setMessage('❌ Network error during upload.');
             setUploading(false);
         }
