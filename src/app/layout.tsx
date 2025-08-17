@@ -31,11 +31,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
 
-      <div className=" z-10">
-      <LightRays className="w-full h-full"/>
+      {/* Background */}
+      <div className="fixed inset-0 -z-10">
+          <LightRays className="w-full h-full" />
       </div>
 
-        {children}
+      {/* Page Content */}
+      <div className="relative z-10">
+          {children}
+      </div>
         <Analytics />
       </body>
     </html>
