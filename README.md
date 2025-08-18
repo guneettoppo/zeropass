@@ -20,7 +20,7 @@
 | Layer       | Tech                                       |
 |-------------|--------------------------------------------|
 | Frontend    | Next.js (App Router)                       |
-| Styling     | None (Minimal UI, no Tailwind)             |
+| Styling     | Minimal                                    |
 | Auth        | Resend (email magic link), JWT             |
 | DB          | PostgreSQL via Neon + Prisma ORM           |
 | Uploads     | Vercel Blob (`@vercel/blob`)               |
